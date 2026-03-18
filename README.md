@@ -1,75 +1,15 @@
 # 2D-and-3D-Gravity-data-inversion
 We present a numerical method to estimate gravity anomalies in the Fourier domain for complex topography. It combines Nagy’s formula, Gauss-FFT, and Parker’s approach. Using differential evolution, it reconstructs basement geometry accurately, validated on synthetic and real 3D basin models.
 
-Objectives
 
-Develop an efficient forward modeling approach for 3D gravity data
+For forward modeling, two approaches are used. In the space domain, Nagy’s analytical solution is applied to compute gravity effects of rectangular prisms, providing high accuracy but at a higher computational cost. In the frequency domain, a Gauss-FFT-based method is implemented, which combines Gaussian quadrature for vertical integration and Fast Fourier Transform for horizontal convolution. This significantly improves computational efficiency, especially for large-scale 3D problems.
 
-Handle complex basin geometry and variable density
+The basin geometry is parameterized using cubic B-spline surfaces defined by a set of control points. This ensures a smooth, continuous, and geologically realistic representation of the subsurface while reducing the number of parameters required for inversion.
 
-Reconstruct basement depth using global optimization
+The inversion problem is formulated as an optimization task, where the objective is to minimize the difference between observed and modeled gravity anomalies using an RMSE-based cost function. Differential Evolution (DE), a population-based global optimization algorithm, is used to explore the model space efficiently and avoid local minima. In some cases, local optimization methods can be applied after DE for further refinement.
 
-Improve computational efficiency using FFT-based methods
+The workflow begins with input data, including observed gravity anomalies and an assumed density model. An initial basin model is defined using a B-spline control grid with specified parameter bounds. Forward modeling is then performed to compute the predicted gravity response. The misfit between observed and modeled data is calculated, and DE iteratively updates the model parameters through mutation, crossover, and selection. This process continues until convergence is achieved or a maximum number of iterations is reached. The final output includes the recovered basement geometry, modeled gravity response, and residual errors.
 
-Input Data
+The method has been validated on both synthetic and real datasets, demonstrating its ability to accurately reconstruct simple and complex basin structures, including cases with variable density. The Gauss-FFT approach provides a significant reduction in computation time while maintaining high accuracy.
 
-The model requires:
-
-Gravity anomaly data – Observed surface gravity values
-
-Grid coordinates (x, y, z) – Spatial discretization
-
-Density model (Δρ) – Constant or depth-varying
-
-Initial basin geometry – Defined via control points
-
-Methodology
-1. Forward Modeling
-
-Two approaches are used:
-
-a. Space Domain (Nagy’s Method)
-
-Models gravity response of rectangular prisms
-
-High accuracy but computationally expensive
-
-b. Frequency Domain (Gauss-FFT)
-
-Uses Fourier transform for fast computation
-
-Vertical integration via Gaussian quadrature
-
-Efficient for large-scale 3D problems
-
-2. Model Parameterization
-
-Basin geometry represented using cubic B-spline surfaces
-
-Defined by a grid of control points (e.g., 5×5, 8×8)
-
-Ensures smooth and realistic subsurface representation
-
-3. Objective Function
-
-The inversion minimizes the misfit between observed and modeled gravity:
-
-Root Mean Square Error (RMSE)
-
-Optional regularization for stability
-
-4. Optimization (Differential Evolution)
-
-Population-based global optimization method
-
-Steps involved:
-
-Initialization of population
-
-Mutation
-
-Crossover
-
-Selection
-
-Robust against local minima
+Overall, this framework offers a fast, flexible, and reliable solution for 3D gravity inversion. It is particularly useful for sedimentary basin analysis, basement depth estimation, and gravity data interpretation in geophysical studies, with potential for further improvements such as integration with seismic data and parallel computation.
